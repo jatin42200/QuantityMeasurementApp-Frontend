@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantity Measurement App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="auth" class="theme-light">
+  <div class="page-shell auth-shell">
+    <header class="top-actions">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span class="theme-toggle__icon" id="themeIcon">☾</span>
+        <span class="theme-toggle__text" id="themeText">Dark Mode</span>
+      </button>
+    </header>
+
+    <main class="auth-layout">
+      <section class="brand-panel">
+        <div class="brand-panel__content">
+          <div class="brand-mark">
+            <img src="assets/logo-mark.svg" alt="Quantity Measurement logo">
+          </div>
+          <h1>Quantity<br>Measurement App</h1>
+          <p class="brand-copy">Measure, compare, convert, and calculate quantities with a cleaner workflow built for quick decisions.</p>
+        </div>
+      </section>
+
+      <section class="auth-card">
+        <div class="auth-tabs" role="tablist" aria-label="Authentication">
+          <button class="auth-tab is-active" type="button" role="tab" aria-selected="true" data-target="loginPanel">Login</button>
+          <button class="auth-tab" type="button" role="tab" aria-selected="false" data-target="signupPanel">Signup</button>
+        </div>
+
+        <form class="auth-form is-active" id="loginPanel" novalidate>
+          <label class="field">
+            <span>Email Id</span>
+            <input type="email" id="loginEmail" value="deepak@gmail.com" placeholder="Enter email">
+          </label>
+          <label class="field field--password">
+            <span>Password</span>
+            <input type="password" id="loginPassword" value="deepak@1234" placeholder="Enter password">
+            <button class="password-toggle" type="button" data-password-toggle="loginPassword" aria-label="Show password">◌</button>
+          </label>
+          <p class="auth-feedback" id="loginFeedback" aria-live="polite"></p>
+          <button class="primary-button" type="submit">Login</button>
+          <div class="divider"><span>OR</span></div>
+          <button class="social-button" type="button" data-social-login>
+            <img src="assets/google.svg" alt="" aria-hidden="true">
+            <span>Continue with Google</span>
+          </button>
+        </form>
+
+        <form class="auth-form" id="signupPanel" novalidate>
+          <label class="field">
+            <span>Full Name</span>
+            <input type="text" id="signupName" placeholder="Enter full name">
+          </label>
+          <label class="field">
+            <span>Email Id</span>
+            <input type="email" id="signupEmail" value="deepak@gmail.com" placeholder="Enter email">
+          </label>
+          <label class="field field--password">
+            <span>Password</span>
+            <input type="password" id="signupPassword" value="deepak@1234" placeholder="Create password">
+            <button class="password-toggle" type="button" data-password-toggle="signupPassword" aria-label="Show password">◌</button>
+          </label>
+          <label class="field">
+            <span>Mobile Number</span>
+            <input type="tel" id="signupPhone" placeholder="Enter mobile number">
+          </label>
+          <p class="auth-feedback" id="signupFeedback" aria-live="polite"></p>
+          <button class="primary-button" type="submit">Signup</button>
+          <div class="divider"><span>OR</span></div>
+          <button class="social-button" type="button" data-social-login>
+            <img src="assets/google.svg" alt="" aria-hidden="true">
+            <span>Continue with Google</span>
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <div class="social-modal" id="googleModal" hidden>
+    <div class="social-modal__backdrop" data-close-social></div>
+    <div class="social-modal__card" role="dialog" aria-modal="true" aria-labelledby="googleModalTitle">
+      <button class="social-modal__close" type="button" data-close-social aria-label="Close">×</button>
+      <div class="social-modal__brand">
+        <img src="assets/google.svg" alt="" aria-hidden="true">
+        <h2 id="googleModalTitle">Continue with Google</h2>
+      </div>
+      <p class="social-modal__copy">Pick an account to continue into Quantity Measurement App.</p>
+      <div class="social-modal__list">
+        <button class="google-account" type="button" data-google-email="deepak@gmail.com">
+          <span class="google-account__avatar">A</span>
+          <span class="google-account__meta">
+            <strong>Deepak</strong>
+            <small>deepak@gmail.com</small>
+          </span>
+        </button>
+        <button class="google-account" type="button" data-google-email="measurement.capgi@gmail.com">
+          <span class="google-account__avatar">Q</span>
+          <span class="google-account__meta">
+            <strong>Capgemini</strong>
+            <small>measurement.capgi@gmail.com</small>
+          </span>
+        </button>
+      </div>
+      <form class="social-modal__custom" id="customGoogleForm">
+        <label class="field">
+          <span>Use Another Google Mail</span>
+          <input type="email" id="customGoogleEmail" placeholder="name@gmail.com">
+        </label>
+        <button class="secondary-button social-modal__action" type="submit">Continue</button>
+      </form>
+      <p class="social-modal__note">This frontend demo stores the selected Google email locally and signs you in immediately.</p>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<div class="qm-app-shell" [class.theme-dark]="darkMode()">
+  <header class="top-actions">
+    <button class="theme-toggle" type="button" (click)="toggleTheme()">
+      <span class="theme-toggle__icon">{{ darkMode() ? '☀' : '☾' }}</span>
+      <span class="theme-toggle__text">{{ darkMode() ? 'Light Mode' : 'Dark Mode' }}</span>
+    </button>
+  </header>
+
+  <main class="auth-layout">
+    <section class="brand-panel">
+      <div class="brand-panel__content">
+        <div class="brand-mark">
+          <img src="assets/logo-mark.svg" alt="Quantity Measurement logo">
+        </div>
+        <h1>Quantity<br>Measurement App</h1>
+        <p class="brand-copy">
+          Connect the Angular frontend to your Spring Boot API for authentication, calculator
+          operations, and admin history tracking.
+        </p>
+      </div>
+    </section>
+
+    <section class="auth-card">
+      <div class="auth-tabs" role="tablist" aria-label="Authentication">
+        <button
+          class="auth-tab"
+          type="button"
+          [class.is-active]="authMode() === 'login'"
+          [attr.aria-selected]="authMode() === 'login'"
+          (click)="setMode('login')"
+        >
+          Login
+        </button>
+        <button
+          class="auth-tab"
+          type="button"
+          [class.is-active]="authMode() === 'signup'"
+          [attr.aria-selected]="authMode() === 'signup'"
+          (click)="setMode('signup')"
+        >
+          Register
+        </button>
+      </div>
+
+      <h2 class="auth-heading">{{ pageTitle() }}</h2>
+      <p class="auth-copy">Use your backend credentials. OAuth login will redirect here and store the JWT automatically.</p>
+
+      @if (oauthFeedback) {
+        <p class="auth-feedback auth-feedback--block">{{ oauthFeedback }}</p>
+      }
+
+      @if (authMode() === 'login') {
+        <form class="auth-form is-active" (ngSubmit)="submitLogin()">
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="loginEmail" [(ngModel)]="loginEmail" placeholder="Enter email" required>
+          </label>
+          <label class="field field--password">
+            <span>Password</span>
+            <input
+              [type]="showLoginPassword ? 'text' : 'password'"
+              name="loginPassword"
+              [(ngModel)]="loginPassword"
+              placeholder="Enter password"
+              required
+            >
+            <button class="password-toggle" type="button" (click)="showLoginPassword = !showLoginPassword">
+              {{ showLoginPassword ? '●' : '◌' }}
+            </button>
+          </label>
+          <p class="auth-feedback">{{ loginFeedback }}</p>
+          <button class="primary-button" type="submit" [disabled]="submitting">
+            {{ submitting ? 'Signing In...' : 'Login' }}
+          </button>
+          <div class="divider"><span>OR</span></div>
+          <button class="social-button" type="button" (click)="continueWithGoogle()" [disabled]="submitting">
+            <img src="assets/google.svg" alt="">
+            <span>Continue with Google</span>
+          </button>
+        </form>
+      } @else {
+        <form class="auth-form is-active" (ngSubmit)="submitSignup()">
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="signupEmail" [(ngModel)]="signupEmail" placeholder="Enter email" required>
+          </label>
+          <label class="field field--password">
+            <span>Password</span>
+            <input
+              [type]="showSignupPassword ? 'text' : 'password'"
+              name="signupPassword"
+              [(ngModel)]="signupPassword"
+              placeholder="Create password"
+              required
+            >
+            <button class="password-toggle" type="button" (click)="showSignupPassword = !showSignupPassword">
+              {{ showSignupPassword ? '●' : '◌' }}
+            </button>
+          </label>
+          <p class="auth-feedback">{{ signupFeedback }}</p>
+          <button class="primary-button" type="submit" [disabled]="submitting">
+            {{ submitting ? 'Creating Account...' : 'Register' }}
+          </button>
+          <div class="divider"><span>OR</span></div>
+          <button class="social-button" type="button" (click)="continueWithGoogle()" [disabled]="submitting">
+            <img src="assets/google.svg" alt="">
+            <span>Continue with Google</span>
+          </button>
+        </form>
+      }
+    </section>
+  </main>
+</div>

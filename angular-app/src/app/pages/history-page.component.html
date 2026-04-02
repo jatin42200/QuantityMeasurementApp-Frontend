@@ -1,0 +1,88 @@
+<div class="qm-app-shell" [class.theme-dark]="darkMode()">
+  <header class="dashboard-header">
+    <div class="dashboard-header__inner">
+      <div>
+        <h1>Measurement History</h1>
+        <p class="dashboard-subtitle">Admin-only access to saved backend operations</p>
+      </div>
+      <div class="dashboard-header__actions">
+        <button class="theme-toggle theme-toggle--compact" type="button" (click)="toggleTheme()">
+          <span class="theme-toggle__icon">{{ darkMode() ? '☀' : '☾' }}</span>
+          <span class="theme-toggle__text">{{ darkMode() ? 'Light Mode' : 'Dark Mode' }}</span>
+        </button>
+        <span class="user-pill">{{ user()?.email }}</span>
+        <a class="secondary-button" routerLink="/dashboard">Calculator</a>
+        <button class="secondary-button" type="button" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <section class="workspace-card">
+      <div class="history-toolbar">
+        <label class="field">
+          <span>Filter By Operation</span>
+          <select class="unit-select unit-select--toolbar" name="selectedOperation" [(ngModel)]="selectedOperation">
+            <option value="">All operations</option>
+            @for (operation of operationOptions; track operation) {
+              <option [value]="operation">{{ operation }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Filter By Measurement Type</span>
+          <select class="unit-select unit-select--toolbar" name="selectedType" [(ngModel)]="selectedType">
+            <option value="">All types</option>
+            @for (type of typeOptions; track type) {
+              <option [value]="type">{{ formatType(type) }}</option>
+            }
+          </select>
+        </label>
+
+        <button class="primary-button history-toolbar__button" type="button" (click)="loadMeasurements()">
+          Apply Filters
+        </button>
+      </div>
+
+      @if (errorMessage) {
+        <p class="auth-feedback auth-feedback--block">{{ errorMessage }}</p>
+      }
+
+      @if (loading) {
+        <p class="inline-banner">Loading history from the backend...</p>
+      } @else if (!records.length) {
+        <p class="inline-banner">No measurement records matched the current filters.</p>
+      } @else {
+        <div class="history-table-wrap">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Operand 1</th>
+                <th>Operand 2</th>
+                <th>Result</th>
+                <th>Error</th>
+                <th>Measurement Type</th>
+                <th>Created At</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (record of records; track record.id) {
+                <tr>
+                  <td>{{ record.operation || '-' }}</td>
+                  <td>{{ record.operand1 || '-' }}</td>
+                  <td>{{ record.operand2 || '-' }}</td>
+                  <td>{{ record.result || '-' }}</td>
+                  <td>{{ record.error || '-' }}</td>
+                  <td>{{ formatType(record.measurementType) }}</td>
+                  <td>{{ formatWhen(record.createdAt) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </main>
+</div>

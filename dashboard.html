@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Quantity Measurement</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="dashboard" class="theme-light">
+  <div class="page-shell dashboard-shell">
+    <header class="dashboard-header">
+      <div class="dashboard-header__inner">
+        <h1>Quantity Measurement</h1>
+        <div class="dashboard-header__actions">
+          <button class="theme-toggle theme-toggle--compact" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="theme-toggle__icon" id="themeIcon">☾</span>
+            <span class="theme-toggle__text" id="themeText">Dark Mode</span>
+          </button>
+          <span class="user-pill" id="userEmail">ayush@gmail.com</span>
+          <a class="secondary-button" href="index.html">Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+      <section class="workspace-card">
+        <div class="section-title">Choose Type</div>
+        <div class="type-grid" id="typeGrid"></div>
+
+        <div class="section-title">Choose Action</div>
+        <div class="action-switcher" id="actionGrid"></div>
+
+        <div class="measurement-layout" id="measurementLayout"></div>
+      </section>
+    </main>
+  </div>
+
+  <template id="comparisonTemplate">
+    <div class="measurement-columns">
+      <div class="input-card">
+        <label>Value 1</label>
+        <input class="value-input" id="comparisonLeftValue" type="number" step="any" value="1">
+        <select class="unit-select" id="comparisonLeftUnit"></select>
+      </div>
+      <div class="versus-badge">VS</div>
+      <div class="input-card">
+        <label>Value 2</label>
+        <input class="value-input" id="comparisonRightValue" type="number" step="any" value="1">
+        <select class="unit-select" id="comparisonRightUnit"></select>
+      </div>
+    </div>
+    <div class="result-card result-card--comparison">
+      <span class="result-card__label">Comparison</span>
+      <strong id="comparisonResult">= Equal</strong>
+    </div>
+  </template>
+
+  <template id="conversionTemplate">
+    <div class="measurement-columns measurement-columns--compact">
+      <div class="input-card">
+        <label>From</label>
+        <input class="value-input" id="conversionFromValue" type="number" step="any" value="1">
+        <select class="unit-select" id="conversionFromUnit"></select>
+      </div>
+      <div class="input-card input-card--highlight">
+        <label>To</label>
+        <input class="value-input" id="conversionToValue" type="number" step="any" value="12" readonly>
+        <select class="unit-select" id="conversionToUnit"></select>
+      </div>
+    </div>
+  </template>
+
+  <template id="arithmeticTemplate">
+    <div class="measurement-columns">
+      <div class="input-card">
+        <label>Value 1</label>
+        <input class="value-input" id="arithmeticLeftValue" type="number" step="any" value="1">
+        <select class="unit-select" id="arithmeticLeftUnit"></select>
+      </div>
+      <div class="operator-badge">
+        <select id="arithmeticOperator" aria-label="Select arithmetic operator">
+          <option value="+">+</option>
+          <option value="-">-</option>
+          <option value="*">×</option>
+          <option value="/">÷</option>
+        </select>
+      </div>
+      <div class="input-card">
+        <label>Value 2</label>
+        <input class="value-input" id="arithmeticRightValue" type="number" step="any" value="1">
+        <select class="unit-select" id="arithmeticRightUnit"></select>
+      </div>
+    </div>
+    <div class="result-card result-card--arithmetic">
+      <span class="result-card__label">Result</span>
+      <div class="result-card__row">
+        <strong id="arithmeticResult">Ans = 2</strong>
+        <select class="unit-select unit-select--floating" id="arithmeticResultUnit"></select>
+      </div>
+    </div>
+  </template>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

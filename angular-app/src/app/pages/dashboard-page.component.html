@@ -1,0 +1,119 @@
+<div class="qm-app-shell" [class.theme-dark]="darkMode()">
+  <header class="dashboard-header">
+    <div class="dashboard-header__inner">
+      <div>
+        <h1>Quantity Measurement</h1>
+        <p class="dashboard-subtitle">Connected to the Spring Boot quantity APIs</p>
+      </div>
+      <div class="dashboard-header__actions">
+        <button class="theme-toggle theme-toggle--compact" type="button" (click)="toggleTheme()">
+          <span class="theme-toggle__icon">{{ darkMode() ? '☀' : '☾' }}</span>
+          <span class="theme-toggle__text">{{ darkMode() ? 'Light Mode' : 'Dark Mode' }}</span>
+        </button>
+        <span class="user-pill">{{ user()?.email }}</span>
+        @if (isAdmin()) {
+          <a class="secondary-button" routerLink="/history">Admin History</a>
+        }
+        <button class="secondary-button" type="button" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <section class="workspace-card">
+      @if (routeMessage) {
+        <p class="inline-banner inline-banner--warning">{{ routeMessage }}</p>
+      }
+
+      <div class="section-title">Choose Type</div>
+      <div class="type-grid">
+        @for (type of types; track type[0]) {
+          <button
+            class="type-card"
+            type="button"
+            [class.is-active]="selectedType() === type[0]"
+            (click)="setType(type[0])"
+          >
+            <span [innerHTML]="typeIcon(type[0], type[1].iconColor)"></span>
+            <span>{{ typeLabel(type[0]) }}</span>
+          </button>
+        }
+      </div>
+
+      <div class="section-title">Choose Operation</div>
+      <div class="action-switcher">
+        @for (operation of operations; track operation.value) {
+          <button
+            class="action-chip"
+            type="button"
+            [class.is-active]="selectedOperation() === operation.value"
+            [disabled]="isOperationDisabled(operation.value)"
+            (click)="setOperation(operation.value)"
+          >
+            {{ operation.label }}
+          </button>
+        }
+      </div>
+
+      @if (!measurementCatalog[selectedType()].supportsArithmetic) {
+        <p class="inline-banner">
+          Temperature arithmetic is blocked in the UI because the backend notes arithmetic is not
+          supported for temperature units.
+        </p>
+      }
+
+      <form class="measurement-layout" (ngSubmit)="submit()">
+        <div class="measurement-columns" [class.measurement-columns--compact]="selectedOperation() === 'convert'">
+          <div class="input-card">
+            <label>Value 1</label>
+            <input class="value-input" type="number" name="firstValue" [(ngModel)]="firstValue" step="any">
+            <select class="unit-select" name="firstUnit" [(ngModel)]="firstUnit">
+              @for (unit of availableUnits(); track unit) {
+                <option [value]="unit">{{ unit }}</option>
+              }
+            </select>
+          </div>
+
+          @if (selectedOperation() === 'convert') {
+            <div class="input-card input-card--highlight">
+              <label>Target Unit</label>
+              <div class="value-input value-input--readonly value-input--label">{{ targetUnit }}</div>
+              <select class="unit-select" name="targetUnit" [(ngModel)]="targetUnit">
+                @for (unit of availableUnits(); track unit) {
+                  <option [value]="unit">{{ unit }}</option>
+                }
+              </select>
+            </div>
+          } @else {
+            <div class="operator-badge">{{ operationLabel(selectedOperation()) }}</div>
+            <div class="input-card">
+              <label>Value 2</label>
+              <input class="value-input" type="number" name="secondValue" [(ngModel)]="secondValue" step="any">
+              <select class="unit-select" name="secondUnit" [(ngModel)]="secondUnit">
+                @for (unit of availableUnits(); track unit) {
+                  <option [value]="unit">{{ unit }}</option>
+                }
+              </select>
+            </div>
+          }
+        </div>
+
+        @if (formError) {
+          <p class="auth-feedback auth-feedback--block">{{ formError }}</p>
+        }
+
+        <button class="primary-button submit-button" type="submit" [disabled]="submitting">
+          {{ submitting ? 'Submitting...' : 'Run Backend Operation' }}
+        </button>
+      </form>
+
+      <div class="result-card result-card--stacked">
+        <span class="result-card__label">{{ resultTitle }}</span>
+        <strong class="result-card__summary">{{ resultSummary }}</strong>
+        @if (rawResponse) {
+          <pre class="result-code">{{ rawResponse }}</pre>
+        }
+      </div>
+    </section>
+  </main>
+</div>

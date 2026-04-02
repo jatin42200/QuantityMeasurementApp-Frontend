@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "fullName": "Deepak Rajput",
+      "email": "deepak@gmail.com",
+      "password": "password123",
+      "phone": "9045451688"
+    }
+  ]
+}
