@@ -1,0 +1,206 @@
+<div class="qm-app-shell" [class.theme-dark]="!darkMode()">
+  <header class="dashboard-header">
+    <div class="dashboard-header__inner">
+      <h1>Quantity Measurement</h1>
+      <div class="dashboard-header__actions">
+        <button class="theme-toggle theme-toggle--compact" type="button" (click)="toggleTheme()">
+          <span class="theme-toggle__text">{{ darkMode() ? 'Light Mode' : 'Dark Mode' }}</span>
+        </button>
+        <span class="user-pill">{{ user()?.email }}</span>
+        <a class="secondary-button history-button" routerLink="/history">
+          History
+        </a>
+        <button class="secondary-button" type="button" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <section class="workspace-card">
+      @if (routeMessage()) {
+        <p class="inline-banner inline-banner--warning">{{ routeMessage() }}</p>
+      }
+
+      <div class="workspace-head">
+        <h2>Measurement Workspace</h2>
+      </div>
+
+      <div class="section-title">1. Choose Measurement Type</div>
+      <div class="type-grid">
+        @for (type of types; track type[0]) {
+          <button
+            class="type-card"
+            type="button"
+            [class.is-active]="selectedType() === type[0]"
+            [style.--type-accent]="typeAccent(type[0])"
+            (click)="setType(type[0])"
+          >
+            <img class="type-card__image" [src]="typeImage(type[0])" [alt]="typeLabel(type[0]) + ' example'">
+            <span class="type-card__name">{{ typeLabel(type[0]) }}</span>
+          </button>
+        }
+      </div>
+
+      <div class="section-title">2. Choose Action</div>
+      <div class="action-switcher action-switcher--three">
+        <button
+          class="action-chip"
+          type="button"
+          [class.is-active]="selectedAction() === 'compare'"
+          [disabled]="isActionDisabled('compare')"
+          (click)="setAction('compare')"
+        >
+          Comparison
+        </button>
+        <button
+          class="action-chip"
+          type="button"
+          [class.is-active]="selectedAction() === 'convert'"
+          [disabled]="isActionDisabled('convert')"
+          (click)="setAction('convert')"
+        >
+          Conversion
+        </button>
+        <button
+          class="action-chip"
+          type="button"
+          [class.is-active]="selectedAction() === 'calculate'"
+          [disabled]="isActionDisabled('calculate')"
+          (click)="setAction('calculate')"
+        >
+          Calculator
+        </button>
+      </div>
+
+      <form class="measurement-layout" (ngSubmit)="runOperation()">
+        <div class="section-title">3. Enter Values</div>
+        @if (selectedAction() === 'convert') {
+          <div class="measurement-columns measurement-columns--compact">
+            <div class="input-card">
+              <label>From</label>
+              <input class="value-input" type="number" name="firstValue" [(ngModel)]="firstValue" step="any" required>
+              <select class="unit-select" name="firstUnit" [(ngModel)]="firstUnit">
+                @for (unit of availableUnits(); track unitTrack($index, unit)) {
+                  <option [value]="unit.value">{{ unit.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="input-card input-card--highlight">
+              <label>To</label>
+              <div class="value-input value-input--readonly">{{ conversionValue }}</div>
+              <select class="unit-select" name="targetUnit" [(ngModel)]="targetUnit">
+                @for (unit of availableUnits(); track unitTrack($index, unit)) {
+                  <option [value]="unit.value">{{ unit.label }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        } @else if (selectedAction() === 'compare') {
+          <div class="measurement-columns">
+            <div class="input-card">
+              <label>Value 1</label>
+              <input class="value-input" type="number" name="firstValue" [(ngModel)]="firstValue" step="any" required>
+              <select class="unit-select" name="firstUnit" [(ngModel)]="firstUnit">
+                @for (unit of availableUnits(); track unitTrack($index, unit)) {
+                  <option [value]="unit.value">{{ unit.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="operator-badge">VS</div>
+
+            <div class="input-card">
+              <label>Value 2</label>
+              <input class="value-input" type="number" name="secondValue" [(ngModel)]="secondValue" step="any" required>
+              <select class="unit-select" name="secondUnit" [(ngModel)]="secondUnit">
+                @for (unit of availableUnits(); track unitTrack($index, unit)) {
+                  <option [value]="unit.value">{{ unit.label }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="result-card result-card--stacked">
+            <span class="result-card__label">Comparison</span>
+            <strong class="result-card__summary">{{ compareSummary }}</strong>
+          </div>
+        } @else {
+          <div class="measurement-columns">
+            <div class="input-card">
+              <label>Value 1</label>
+              <input class="value-input" type="number" name="firstValue" [(ngModel)]="firstValue" step="any" required>
+              <select class="unit-select" name="firstUnit" [(ngModel)]="firstUnit">
+                @for (unit of availableUnits(); track unitTrack($index, unit)) {
+                  <option [value]="unit.value">{{ unit.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="operator-buttons">
+              <button
+                class="operator-button"
+                type="button"
+                [class.is-active]="selectedCalculatorOperation === 'add'"
+                (click)="setCalculatorOperation('add')"
+              >
+                +
+              </button>
+              <button
+                class="operator-button"
+                type="button"
+                [class.is-active]="selectedCalculatorOperation === 'subtract'"
+                (click)="setCalculatorOperation('subtract')"
+              >
+                -
+              </button>
+              <button
+                class="operator-button"
+                type="button"
+                [class.is-active]="selectedCalculatorOperation === 'multiply'"
+                (click)="setCalculatorOperation('multiply')"
+              >
+                *
+              </button>
+              <button
+                class="operator-button"
+                type="button"
+                [class.is-active]="selectedCalculatorOperation === 'divide'"
+                (click)="setCalculatorOperation('divide')"
+              >
+                /
+              </button>
+            </div>
+
+            <div class="input-card">
+              <label>Value 2</label>
+              <input class="value-input" type="number" name="secondValue" [(ngModel)]="secondValue" step="any" required>
+              <select class="unit-select" name="secondUnit" [(ngModel)]="secondUnit">
+                @for (unit of availableUnits(); track unitTrack($index, unit)) {
+                  <option [value]="unit.value">{{ unit.label }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="result-card result-card--stacked">
+            <span class="result-card__label">Result</span>
+            <div class="result-row">
+              <strong class="result-card__summary">{{ calculationSummary }}</strong>
+              <span class="result-unit-chip">{{ unitLabel(firstUnit) }}</span>
+            </div>
+          </div>
+        }
+
+        @if (formError) {
+          <p class="auth-feedback auth-feedback--block">{{ formError }}</p>
+        }
+
+        <button class="primary-button submit-button" type="submit" [disabled]="submitting">
+          {{ submitting ? 'Running...' : 'Run ' + actionLabel() }}
+        </button>
+      </form>
+    </section>
+  </main>
+</div>
+
